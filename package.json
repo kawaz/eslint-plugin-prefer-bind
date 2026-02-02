@@ -1,5 +1,5 @@
 {
-  "name": "eslint-plugin-prefer-bind",
+  "name": "@kawaz/eslint-plugin-prefer-bind",
   "version": "0.1.0",
   "description": "ESLint plugin to prefer .bind() over closure wrappers for method calls to prevent memory leaks",
   "type": "module",
@@ -21,10 +21,15 @@
     "eslint-plugin",
     "bind",
     "closure",
-    "memory-leak"
+    "memory-leak",
+    "jsc",
+    "bun"
   ],
   "author": "Yoshiaki Kawazu (@kawaz)",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "peerDependencies": {
     "eslint": ">=8.0.0"
   },
@@ -38,6 +43,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kawaz/eslint-plugin-prefer-bind.git"
+    "url": "git+https://github.com/kawaz/eslint-plugin-prefer-bind.git"
+  },
+  "homepage": "https://github.com/kawaz/eslint-plugin-prefer-bind#readme",
+  "bugs": {
+    "url": "https://github.com/kawaz/eslint-plugin-prefer-bind/issues"
   }
 }

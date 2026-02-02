@@ -19,9 +19,9 @@ This pattern caused a [~1GB memory leak in Claude Code](https://x.com/jarredsumn
 ## Installation
 
 ```bash
-npm install --save-dev eslint-plugin-prefer-bind
+npm install --save-dev @kawaz/eslint-plugin-prefer-bind
 # or
-bun add -d eslint-plugin-prefer-bind
+bun add -d @kawaz/eslint-plugin-prefer-bind
 ```
 
 ## Usage
@@ -29,7 +29,7 @@ bun add -d eslint-plugin-prefer-bind
 ### ESLint Flat Config (eslint.config.js)
 
 ```javascript
-import preferBind from "eslint-plugin-prefer-bind";
+import preferBind from "@kawaz/eslint-plugin-prefer-bind";
 
 export default [
   {
