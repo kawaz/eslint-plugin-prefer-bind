@@ -27,3 +27,10 @@ jobs:
 
       - name: Lint with oxlint (experimental JS plugin)
         run: bunx oxlint test-sample.js
+
+      - name: Test sample project (integration test)
+        run: |
+          cd examples/sample-project
+          bun install
+          bun run lint:eslint
+          bun run lint:oxlint

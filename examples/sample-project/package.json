@@ -1,0 +1,17 @@
+{
+  "name": "sample-project",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint:eslint": "eslint sample.js",
+    "lint:oxlint": "oxlint sample.js",
+    "lint": "npm run lint:eslint && npm run lint:oxlint",
+    "test": "npm run lint"
+  },
+  "devDependencies": {
+    "@kawaz/eslint-plugin-prefer-bind": "file:../..",
+    "eslint": "^9.0.0",
+    "oxlint": "^1.42.0"
+  }
+}
