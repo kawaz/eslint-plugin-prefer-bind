@@ -150,6 +150,22 @@ ruleTester.run("prefer-bind", rule, {
       ],
     },
 
+    // setTimeout without delay - defaults to 0 when args present
+    {
+      code: "setTimeout(() => obj.method(arg))",
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "setTimeout(obj.method.bind(obj), 0, arg)",
+            },
+          ],
+        },
+      ],
+    },
+
     // Spread syntax in arguments
     {
       code: "setTimeout(() => obj.method(arg1, ...args), 1000)",
