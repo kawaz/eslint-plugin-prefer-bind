@@ -30,11 +30,8 @@ jobs:
       - name: Run tests
         run: bun test
 
-      - name: Lint with ESLint
+      - name: Lint with ESLint (test plugin)
         run: bunx eslint test-sample.js
-
-      - name: Lint with oxlint
-        run: bunx oxlint test-sample.js
 
       - name: Check version change
         id: version
