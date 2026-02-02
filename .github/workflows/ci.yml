@@ -25,5 +25,18 @@ jobs:
       - name: Lint with ESLint (test plugin)
         run: bunx eslint test-sample.js
 
-      # Note: oxlint JS plugins are experimental and may not work in CI
-      # Users can still use oxlint locally with .oxlintrc.json
+      - name: Debug oxlint setup
+        run: |
+          echo "=== Current directory ==="
+          pwd
+          echo "=== Files ==="
+          ls -la
+          echo "=== lib directory ==="
+          ls -la lib/
+          echo "=== .oxlintrc.json ==="
+          cat .oxlintrc.json
+          echo "=== oxlint version ==="
+          bunx oxlint --version
+
+      - name: Lint with oxlint
+        run: bunx oxlint test-sample.js
