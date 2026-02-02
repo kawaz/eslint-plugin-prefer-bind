@@ -1,0 +1,42 @@
+{
+  "name": "eslint-plugin-prefer-bind",
+  "version": "0.1.0",
+  "description": "ESLint plugin to prefer .bind() over closure wrappers for method calls to prevent memory leaks",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "lint": "eslint ."
+  },
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "bind",
+    "closure",
+    "memory-leak"
+  ],
+  "author": "Yoshiaki Kawazu (@kawaz)",
+  "license": "MIT",
+  "peerDependencies": {
+    "eslint": ">=8.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "vitest": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kawaz/eslint-plugin-prefer-bind.git"
+  }
+}
