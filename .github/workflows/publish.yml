@@ -33,18 +33,7 @@ jobs:
       - name: Lint with ESLint (test plugin)
         run: bunx eslint test-sample.js
 
-      - name: Debug oxlint setup
-        run: |
-          echo "=== Current directory ==="
-          pwd
-          echo "=== Files ==="
-          ls -la
-          echo "=== lib directory ==="
-          ls -la lib/
-          echo "=== .oxlintrc.json ==="
-          cat .oxlintrc.json
-
-      - name: Lint with oxlint
+      - name: Lint with oxlint (experimental JS plugin)
         run: bunx oxlint test-sample.js
 
       - name: Check version change
