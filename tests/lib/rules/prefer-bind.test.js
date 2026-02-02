@@ -17,8 +17,9 @@ ruleTester.run("prefer-bind", rule, {
     // Arrow function with arguments - cannot be converted
     "(x) => obj.method(x)",
 
-    // Arrow function calling method with arguments
+    // Arrow function calling method with arguments (outside timer context)
     "() => obj.method(arg)",
+    "arr.map(() => obj.method(arg))",
 
     // Arrow function with multiple statements
     "() => { obj.method(); cleanup(); }",
@@ -179,6 +180,64 @@ ruleTester.run("prefer-bind", rule, {
             {
               messageId: "preferBindSuggestion",
               output: "myCustomHandler(obj.method.bind(obj))",
+            },
+          ],
+        },
+      ],
+    },
+
+    // setTimeout/setInterval with arguments - moves args after delay
+    {
+      code: "setTimeout(() => obj.method(arg1, arg2), 1000)",
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "setTimeout(obj.method.bind(obj), 1000, arg1, arg2)",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: "setInterval(() => obj.tick(data), 100)",
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "setInterval(obj.tick.bind(obj), 100, data)",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: "window.setTimeout(() => obj.method(arg), delay)",
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "setTimeout(obj.method.bind(obj), delay, arg)",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: "setTimeout(function() { obj.method(arg); }, 1000)",
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "setTimeout(obj.method.bind(obj), 1000, arg)",
             },
           ],
         },

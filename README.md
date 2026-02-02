@@ -57,6 +57,18 @@ function() { obj.method(); }
 obj.method.bind(obj)
 ```
 
+### setTimeout/setInterval with Arguments
+
+For `setTimeout` and `setInterval`, the rule also handles closures with arguments by moving them after the delay parameter:
+
+```javascript
+// ❌ Warns
+setTimeout(() => obj.method(arg1, arg2), 1000)
+
+// ✅ Suggested fix
+setTimeout(obj.method.bind(obj), 1000, arg1, arg2)
+```
+
 ### Options
 
 ```javascript
