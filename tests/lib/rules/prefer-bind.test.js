@@ -150,6 +150,36 @@ ruleTester.run("prefer-bind", rule, {
       ],
     },
 
+    // Spread syntax in arguments
+    {
+      code: "setTimeout(() => obj.method(arg1, ...args), 1000)",
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "setTimeout(obj.method.bind(obj), 1000, arg1, ...args)",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: "setTimeout(() => obj.method(...args), 1000)",
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "setTimeout(obj.method.bind(obj), 1000, ...args)",
+            },
+          ],
+        },
+      ],
+    },
+
     // Block-body in long-lived context
     {
       code: "setTimeout(() => { obj.method(); }, 1000)",
