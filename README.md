@@ -45,16 +45,14 @@ export default [
 
 ### oxlint (experimental)
 
-oxlint supports JS plugins experimentally. Use an alias to set the plugin name:
+oxlint supports JS plugins experimentally:
 
 ```json
 // .oxlintrc.json
 {
-  "jsPlugins": [
-    { "name": "prefer-bind", "specifier": "@kawaz/eslint-plugin-prefer-bind" }
-  ],
+  "jsPlugins": ["@kawaz/eslint-plugin-prefer-bind"],
   "rules": {
-    "prefer-bind/prefer-bind": "warn"
+    "@kawaz/eslint-plugin-prefer-bind/prefer-bind": "warn"
   }
 }
 ```

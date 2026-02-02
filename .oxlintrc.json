@@ -1,8 +1,6 @@
 {
-  "jsPlugins": [
-    { "name": "prefer-bind", "specifier": "./lib/index.js" }
-  ],
+  "jsPlugins": ["./lib/index.js"],
   "rules": {
-    "prefer-bind/prefer-bind": "warn"
+    "@kawaz/eslint-plugin-prefer-bind/prefer-bind": "warn"
   }
 }
