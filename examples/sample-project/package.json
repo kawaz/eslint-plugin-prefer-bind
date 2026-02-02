@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "lint:eslint": "eslint sample.js",
-    "lint:oxlint": "oxlint sample.js",
+    "lint:oxlint": "oxlint -A all sample.js",
     "lint": "npm run lint:eslint && npm run lint:oxlint",
     "test": "npm run lint"
   },

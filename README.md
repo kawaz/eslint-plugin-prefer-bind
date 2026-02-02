@@ -59,7 +59,34 @@ oxlint supports JS plugins experimentally:
 
 ## Rule: `prefer-bind/prefer-bind`
 
-By default, detects closure wrappers in **long-lived contexts** (setTimeout, setInterval, addEventListener, etc.) that can be replaced with `.bind()`:
+By default, detects closure wrappers in **long-lived contexts** (setTimeout, setInterval, addEventListener, etc.) that can be replaced with `.bind()`.
+
+### Example Output
+
+The warning message includes the suggested fix:
+
+**ESLint:**
+```
+sample.js
+  2:12  warning  Prefer 'obj.method.bind(obj)' over closure wrapper  prefer-bind/prefer-bind
+  3:1   warning  Prefer 'setInterval(obj.tick.bind(obj), 100, data)' over closure wrapper  prefer-bind/prefer-bind
+```
+
+**oxlint:**
+```
+! @kawaz/prefer-bind(prefer-bind): Prefer 'obj.method.bind(obj)' over closure wrapper.
+   ,-[sample.js:2:12]
+ 1 | // callback
+ 2 | setTimeout(() => obj.method(), 1000);
+   :            ^^^^^^^^^^^^^^^^^^
+   `----
+```
+
+### Why Only Specific Functions?
+
+By default, warnings are limited to **long-lived contexts** like `setTimeout`, `setInterval`, `addEventListener`, `on`, `once`, and `subscribe`. These are functions that store callbacks beyond the current call stack, where captured scope can cause memory leaks.
+
+Short-lived contexts like `arr.map()` or `arr.filter()` execute callbacks immediately and discard them, so captured scope is released promptly—no memory leak risk.
 
 ```javascript
 // ❌ Warns (long-lived context)
