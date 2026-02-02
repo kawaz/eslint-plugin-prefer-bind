@@ -1,5 +1,7 @@
 {
-  "jsPlugins": ["./lib/index.js"],
+  "jsPlugins": [
+    { "name": "prefer-bind", "specifier": "./lib/index.js" }
+  ],
   "rules": {
     "prefer-bind/prefer-bind": "warn"
   }

@@ -43,6 +43,22 @@ export default [
 ];
 ```
 
+### oxlint (experimental)
+
+oxlint supports JS plugins experimentally. Use an alias to set the plugin name:
+
+```json
+// .oxlintrc.json
+{
+  "jsPlugins": [
+    { "name": "prefer-bind", "specifier": "@kawaz/eslint-plugin-prefer-bind" }
+  ],
+  "rules": {
+    "prefer-bind/prefer-bind": "warn"
+  }
+}
+```
+
 ## Rule: `prefer-bind/prefer-bind`
 
 By default, detects closure wrappers in **long-lived contexts** (setTimeout, setInterval, addEventListener, etc.) that can be replaced with `.bind()`:
