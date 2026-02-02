@@ -45,16 +45,19 @@ export default [
 
 ## Rule: `prefer-bind/prefer-bind`
 
-Detects closure wrappers that can be replaced with `.bind()`:
+By default, detects closure wrappers in **long-lived contexts** (setTimeout, setInterval, addEventListener, etc.) that can be replaced with `.bind()`:
 
 ```javascript
-// ❌ Warns
-() => obj.method()
-() => { obj.method(); }
-function() { obj.method(); }
+// ❌ Warns (long-lived context)
+setTimeout(() => obj.method(), 1000)
+signal.addEventListener('abort', () => controller.abort())
 
-// ✅ OK
-obj.method.bind(obj)
+// ✅ OK (short-lived context - no memory leak risk)
+arr.map(() => obj.transform())
+const fn = () => obj.method()
+
+// ✅ OK (already using bind)
+setTimeout(obj.method.bind(obj), 1000)
 ```
 
 ### setTimeout/setInterval with Arguments
@@ -73,10 +76,10 @@ setTimeout(obj.method.bind(obj), 1000, arg1, arg2)
 
 ```javascript
 "prefer-bind/prefer-bind": ["warn", {
-  // Only warn when passed to long-lived contexts (default: false)
+  // Only warn in long-lived contexts (default: true)
   "onlyInLongLivedContexts": true,
 
-  // Custom list of long-lived context functions (default shown below)
+  // Functions that hold callbacks long-term (default shown below)
   "longLivedContexts": [
     "addEventListener",
     "setTimeout",
@@ -87,23 +90,22 @@ setTimeout(obj.method.bind(obj), 1000, arg1, arg2)
   ],
 
   // Include async functions in detection (default: false)
-  // Warning: async and sync functions have different return types
   "includeAsync": false
 }]
 ```
 
 ### `onlyInLongLivedContexts`
 
-When `true`, only warns when the closure is passed to functions known to hold references long-term:
+Default is `true` - only warns in long-lived contexts where memory leaks are a real concern.
+
+Set to `false` to warn everywhere (not recommended for most codebases):
 
 ```javascript
-// With onlyInLongLivedContexts: true
+// With onlyInLongLivedContexts: false
 
-// ❌ Warns (addEventListener holds reference)
-signal.addEventListener('abort', () => controller.abort());
-
-// ✅ OK (map doesn't hold reference long-term)
-items.map(() => obj.transform());
+// ❌ Warns even in short-lived contexts
+arr.map(() => obj.transform());
+const fn = () => obj.method();
 ```
 
 ### `includeAsync`

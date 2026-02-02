@@ -14,10 +14,8 @@ ruleTester.run("prefer-bind", rule, {
     // Already using .bind()
     "controller.abort.bind(controller)",
 
-    // Arrow function with arguments - cannot be converted
+    // Arrow function with arguments - cannot be converted (outside timer)
     "(x) => obj.method(x)",
-
-    // Arrow function calling method with arguments (outside timer context)
     "() => obj.method(arg)",
     "arr.map(() => obj.method(arg))",
 
@@ -32,109 +30,22 @@ ruleTester.run("prefer-bind", rule, {
 
     // Async arrow function (ignored by default)
     "async () => obj.method()",
-    "async () => await obj.method()",
-    "async () => { obj.method(); }",
-    "async () => { await obj.method(); }",
+    "setTimeout(async () => obj.method(), 1000)",
 
-    // Async function expression (ignored by default)
-    "const fn = async function() { obj.method(); }",
-    "const fn = async function() { await obj.method(); }",
-
-    // With onlyInLongLivedContexts: true, should not warn outside long-lived contexts
-    {
-      code: "const fn = () => obj.method()",
-      options: [{ onlyInLongLivedContexts: true }],
-    },
-    {
-      code: "arr.map(() => obj.method())",
-      options: [{ onlyInLongLivedContexts: true }],
-    },
+    // Outside long-lived contexts (default: onlyInLongLivedContexts=true)
+    "const fn = () => obj.method()",
+    "arr.map(() => obj.method())",
+    "() => controller.abort()",
+    "() => obj.method()",
+    "() => { obj.method(); }",
+    "const fn = function() { obj.method(); }",
+    "() => this.controller.abort()",
   ],
 
   invalid: [
-    // Simple arrow function wrappers
-    {
-      code: "() => controller.abort()",
-      errors: [
-        {
-          messageId: "preferBind",
-          data: { replacement: "controller.abort.bind(controller)" },
-          suggestions: [
-            {
-              messageId: "preferBindSuggestion",
-              output: "controller.abort.bind(controller)",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      code: "() => obj.method()",
-      errors: [
-        {
-          messageId: "preferBind",
-          suggestions: [
-            {
-              messageId: "preferBindSuggestion",
-              output: "obj.method.bind(obj)",
-            },
-          ],
-        },
-      ],
-    },
-
-    // Block-body arrow functions
-    {
-      code: "() => { obj.method(); }",
-      errors: [
-        {
-          messageId: "preferBind",
-          suggestions: [
-            {
-              messageId: "preferBindSuggestion",
-              output: "obj.method.bind(obj)",
-            },
-          ],
-        },
-      ],
-    },
-
-    // Function expressions (must be in expression context)
-    {
-      code: "const fn = function() { obj.method(); }",
-      errors: [
-        {
-          messageId: "preferBind",
-          suggestions: [
-            {
-              messageId: "preferBindSuggestion",
-              output: "const fn = obj.method.bind(obj)",
-            },
-          ],
-        },
-      ],
-    },
-
-    // Chained member expressions
-    {
-      code: "() => this.controller.abort()",
-      errors: [
-        {
-          messageId: "preferBind",
-          suggestions: [
-            {
-              messageId: "preferBindSuggestion",
-              output: "this.controller.abort.bind(this.controller)",
-            },
-          ],
-        },
-      ],
-    },
-
-    // onlyInLongLivedContexts option
+    // addEventListener
     {
       code: "signal.addEventListener('abort', () => controller.abort())",
-      options: [{ onlyInLongLivedContexts: true }],
       errors: [
         {
           messageId: "preferBind",
@@ -148,9 +59,10 @@ ruleTester.run("prefer-bind", rule, {
         },
       ],
     },
+
+    // setTimeout without args
     {
       code: "setTimeout(() => obj.cleanup(), 1000)",
-      options: [{ onlyInLongLivedContexts: true }],
       errors: [
         {
           messageId: "preferBind",
@@ -164,22 +76,16 @@ ruleTester.run("prefer-bind", rule, {
       ],
     },
 
-    // Custom longLivedContexts
+    // setInterval without args
     {
-      code: "myCustomHandler(() => obj.method())",
-      options: [
-        {
-          onlyInLongLivedContexts: true,
-          longLivedContexts: ["myCustomHandler"],
-        },
-      ],
+      code: "setInterval(() => obj.tick(), 100)",
       errors: [
         {
           messageId: "preferBind",
           suggestions: [
             {
               messageId: "preferBindSuggestion",
-              output: "myCustomHandler(obj.method.bind(obj))",
+              output: "setInterval(obj.tick.bind(obj), 100)",
             },
           ],
         },
@@ -244,72 +150,90 @@ ruleTester.run("prefer-bind", rule, {
       ],
     },
 
-    // includeAsync option - async arrow functions
+    // Block-body in long-lived context
     {
-      code: "async () => obj.method()",
-      options: [{ includeAsync: true }],
+      code: "setTimeout(() => { obj.method(); }, 1000)",
       errors: [
         {
           messageId: "preferBind",
           suggestions: [
             {
               messageId: "preferBindSuggestion",
-              output: "obj.method.bind(obj)",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      code: "async () => await obj.method()",
-      options: [{ includeAsync: true }],
-      errors: [
-        {
-          messageId: "preferBind",
-          suggestions: [
-            {
-              messageId: "preferBindSuggestion",
-              output: "obj.method.bind(obj)",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      code: "async () => { obj.method(); }",
-      options: [{ includeAsync: true }],
-      errors: [
-        {
-          messageId: "preferBind",
-          suggestions: [
-            {
-              messageId: "preferBindSuggestion",
-              output: "obj.method.bind(obj)",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      code: "async () => { await obj.method(); }",
-      options: [{ includeAsync: true }],
-      errors: [
-        {
-          messageId: "preferBind",
-          suggestions: [
-            {
-              messageId: "preferBindSuggestion",
-              output: "obj.method.bind(obj)",
+              output: "setTimeout(obj.method.bind(obj), 1000)",
             },
           ],
         },
       ],
     },
 
-    // includeAsync option - async function expressions
+    // Function expression in long-lived context
     {
-      code: "const fn = async function() { obj.method(); }",
-      options: [{ includeAsync: true }],
+      code: "setTimeout(function() { obj.method(); }, 1000)",
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "setTimeout(obj.method.bind(obj), 1000)",
+            },
+          ],
+        },
+      ],
+    },
+
+    // Chained member expressions in long-lived context
+    {
+      code: "setTimeout(() => this.controller.abort(), 1000)",
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "setTimeout(this.controller.abort.bind(this.controller), 1000)",
+            },
+          ],
+        },
+      ],
+    },
+
+    // Custom longLivedContexts
+    {
+      code: "myCustomHandler(() => obj.method())",
+      options: [{ longLivedContexts: ["myCustomHandler"] }],
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "myCustomHandler(obj.method.bind(obj))",
+            },
+          ],
+        },
+      ],
+    },
+
+    // onlyInLongLivedContexts: false - warns everywhere
+    {
+      code: "() => obj.method()",
+      options: [{ onlyInLongLivedContexts: false }],
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "obj.method.bind(obj)",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: "const fn = function() { obj.method(); }",
+      options: [{ onlyInLongLivedContexts: false }],
       errors: [
         {
           messageId: "preferBind",
@@ -322,8 +246,10 @@ ruleTester.run("prefer-bind", rule, {
         },
       ],
     },
+
+    // includeAsync option - in long-lived context
     {
-      code: "const fn = async function() { await obj.method(); }",
+      code: "setTimeout(async () => obj.method(), 1000)",
       options: [{ includeAsync: true }],
       errors: [
         {
@@ -331,7 +257,82 @@ ruleTester.run("prefer-bind", rule, {
           suggestions: [
             {
               messageId: "preferBindSuggestion",
-              output: "const fn = obj.method.bind(obj)",
+              output: "setTimeout(obj.method.bind(obj), 1000)",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: "setTimeout(async () => await obj.method(), 1000)",
+      options: [{ includeAsync: true }],
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "setTimeout(obj.method.bind(obj), 1000)",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: "setTimeout(async () => { obj.method(); }, 1000)",
+      options: [{ includeAsync: true }],
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "setTimeout(obj.method.bind(obj), 1000)",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: "setTimeout(async () => { await obj.method(); }, 1000)",
+      options: [{ includeAsync: true }],
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "setTimeout(obj.method.bind(obj), 1000)",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: "setTimeout(async function() { obj.method(); }, 1000)",
+      options: [{ includeAsync: true }],
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "setTimeout(obj.method.bind(obj), 1000)",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: "setTimeout(async function() { await obj.method(); }, 1000)",
+      options: [{ includeAsync: true }],
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "setTimeout(obj.method.bind(obj), 1000)",
             },
           ],
         },
