@@ -32,5 +32,23 @@ jobs:
         run: |
           cd examples/sample-project
           bun install
-          bun run lint:eslint
-          bun run lint:oxlint
+
+          # ESLint: verify 3 warnings are produced
+          ESLINT_OUTPUT=$(bunx eslint sample.js 2>&1 || true)
+          echo "$ESLINT_OUTPUT"
+          ESLINT_COUNT=$(echo "$ESLINT_OUTPUT" | grep -c "prefer-bind/prefer-bind" || true)
+          if [ "$ESLINT_COUNT" -ne 3 ]; then
+            echo "ERROR: Expected 3 ESLint warnings, got $ESLINT_COUNT"
+            exit 1
+          fi
+
+          # oxlint: verify 3 warnings are produced
+          OXLINT_OUTPUT=$(bunx oxlint sample.js 2>&1 || true)
+          echo "$OXLINT_OUTPUT"
+          OXLINT_COUNT=$(echo "$OXLINT_OUTPUT" | grep -c "prefer-bind" || true)
+          if [ "$OXLINT_COUNT" -ne 3 ]; then
+            echo "ERROR: Expected 3 oxlint warnings, got $OXLINT_COUNT"
+            exit 1
+          fi
+
+          echo "Integration test passed: 3 warnings from each linter"

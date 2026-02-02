@@ -1,6 +1,7 @@
 {
   "jsPlugins": ["@kawaz/eslint-plugin-prefer-bind"],
   "rules": {
-    "@kawaz/eslint-plugin-prefer-bind/prefer-bind": "warn"
+    "@kawaz/eslint-plugin-prefer-bind/prefer-bind": "warn",
+    "no-unused-vars": "off"
   }
 }
