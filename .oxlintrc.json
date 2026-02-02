@@ -1,0 +1,6 @@
+{
+  "jsPlugins": ["./lib/index.js"],
+  "rules": {
+    "prefer-bind/prefer-bind": "warn"
+  }
+}
