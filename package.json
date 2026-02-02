@@ -1,6 +1,6 @@
 {
   "name": "@kawaz/eslint-plugin-prefer-bind",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "ESLint plugin to prefer .bind() over closure wrappers for method calls to prevent memory leaks",
   "type": "module",
   "main": "lib/index.js",
