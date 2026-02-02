@@ -4,7 +4,7 @@ This document describes the differences in memory behavior between V8 (Node.js) 
 
 ## Background
 
-In January 2025, a [memory leak fix](https://x.com/AmanPathak_/status/1885378327232827723) in Claude Code reduced memory usage by ~1GB by changing:
+A [memory leak fix](https://x.com/jarredsumner/status/2017825694731145388) in Claude Code reduced memory usage by ~1GB by changing:
 
 ```javascript
 // Before: Arrow function captures surrounding scope
@@ -67,7 +67,7 @@ V8's aggressive optimizations can mask memory issues that become apparent in JSC
 
 ## References
 
-- [Original tweet about Claude Code memory fix](https://x.com/AmanPathak_/status/1885378327232827723)
+- [Original tweet about Claude Code memory fix](https://x.com/jarredsumner/status/2017825694731145388)
 - [V8 Blog: An Introduction to Speculative Optimization](https://v8.dev/blog/speculative-optimization)
 - [WebKit Blog: Introducing the JIT](https://webkit.org/blog/3362/introducing-the-webkit-ftl-jit/)
 - [MDN: Closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures)

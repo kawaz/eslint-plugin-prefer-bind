@@ -14,7 +14,7 @@ signal.addEventListener('abort', () => controller.abort());
 signal.addEventListener('abort', controller.abort.bind(controller));
 ```
 
-This pattern caused a [~1GB memory leak in Claude Code](https://x.com/AmanPathak_/status/1885378327232827723) when running on Bun (JSC). See [V8 vs JSC Memory Behavior](./docs/v8-vs-jsc-memory-behavior.md) for details on why this affects JSC more than V8.
+This pattern caused a [~1GB memory leak in Claude Code](https://x.com/jarredsumner/status/2017825694731145388) when running on Bun (JSC). See [V8 vs JSC Memory Behavior](./docs/v8-vs-jsc-memory-behavior.md) for details on why this affects JSC more than V8.
 
 ## Installation
 
