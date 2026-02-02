@@ -29,8 +29,15 @@ ruleTester.run("prefer-bind", rule, {
     // Computed property access
     "() => obj[method]()",
 
-    // Async arrow function
+    // Async arrow function (ignored by default)
     "async () => obj.method()",
+    "async () => await obj.method()",
+    "async () => { obj.method(); }",
+    "async () => { await obj.method(); }",
+
+    // Async function expression (ignored by default)
+    "const fn = async function() { obj.method(); }",
+    "const fn = async function() { await obj.method(); }",
 
     // With onlyInLongLivedContexts: true, should not warn outside long-lived contexts
     {
@@ -172,6 +179,100 @@ ruleTester.run("prefer-bind", rule, {
             {
               messageId: "preferBindSuggestion",
               output: "myCustomHandler(obj.method.bind(obj))",
+            },
+          ],
+        },
+      ],
+    },
+
+    // includeAsync option - async arrow functions
+    {
+      code: "async () => obj.method()",
+      options: [{ includeAsync: true }],
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "obj.method.bind(obj)",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: "async () => await obj.method()",
+      options: [{ includeAsync: true }],
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "obj.method.bind(obj)",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: "async () => { obj.method(); }",
+      options: [{ includeAsync: true }],
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "obj.method.bind(obj)",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: "async () => { await obj.method(); }",
+      options: [{ includeAsync: true }],
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "obj.method.bind(obj)",
+            },
+          ],
+        },
+      ],
+    },
+
+    // includeAsync option - async function expressions
+    {
+      code: "const fn = async function() { obj.method(); }",
+      options: [{ includeAsync: true }],
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "const fn = obj.method.bind(obj)",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: "const fn = async function() { await obj.method(); }",
+      options: [{ includeAsync: true }],
+      errors: [
+        {
+          messageId: "preferBind",
+          suggestions: [
+            {
+              messageId: "preferBindSuggestion",
+              output: "const fn = obj.method.bind(obj)",
             },
           ],
         },
